@@ -3,145 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUMBLEVERSE</title>
+    <title>JUMBLEVERSE - Ultimate Word Solver</title>
     <style>
-        body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; }
-        .layout-wrapper { display: flex; width: 100%; max-width: 1600px; margin: 0 auto; }
-        .sidebar-ad-column { width: 160px; min-width: 160px; min-height: 600px; border: 1px dashed #333; text-align: center; color: #555; padding-top: 100px; }
-        .center-content-column { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 0 20px; width: 100%; }
-        .ad-container { width: 100%; min-height: 90px; border: 1px dashed #333; text-align: center; color: #555; margin: 10px 0; }
-        .main-content { width: 100%; max-width: 900px; background: #11141a; border: 2px solid #00ff00; border-radius: 10px; padding: 35px; text-align: center; }
-        h1 { color: #00ff00; font-size: 3rem; font-style: italic; text-transform: uppercase; }
-        .limit-notice { color: #00ff00; font-size: 0.85rem; margin-top: 8px; font-weight: bold; }
-        input[type="text"] { background: #1f232b; border: 1px solid #00ff00; color: #fff; padding: 15px; font-size: 1.1rem; width: 350px; }
-        button { background: transparent; color: #00ff00; border: 2px solid #00ff00; padding: 15px 35px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        button:hover { background: #00ff00; color: #000; }
-        .word-group { margin-bottom: 25px; text-align: left; }
-        .group-title { font-size: 1.1rem; margin-bottom: 10px; font-weight: bold; }
-        .word-box { display: inline-block; background: #1f232b; border: 1px solid #00ff00; color: #00ff00; padding: 8px 15px; margin: 5px; border-radius: 5px; font-weight: bold; }
-        .offensive-section { border: 2px dashed #ff0000; padding: 20px; margin-top: 30px; text-align: left; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #000; color: #00ff00; font-family: 'Courier New', Courier, monospace; padding: 20px; display: flex; justify-content: center; }
+        .wrapper { display: flex; gap: 20px; max-width: 1200px; width: 100%; justify-content: center; }
+        .sidebar-ad { width: 160px; height: 600px; border: 2px dashed #333; background: #0a0a0a; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.8rem; text-align: center; padding: 10px; }
+        .container { flex: 1; max-width: 800px; border: 3px solid #00ff00; padding: 30px; box-shadow: 0 0 20px #00ff00; border-radius: 10px; background: #050505; text-align: center; }
+        h1 { font-size: 3rem; margin-bottom: 20px; letter-spacing: 5px; text-shadow: 0 0 10px #00ff00; }
+        .input-group { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        input { background: #000; border: 2px solid #00ff00; color: #00ff00; padding: 12px 20px; font-size: 1.2rem; font-family: inherit; width: 60%; outline: none; border-radius: 5px; }
+        input:focus { box-shadow: 0 0 10px #00ff00; }
+        button { background: #00ff00; color: #000; border: none; padding: 12px 25px; font-size: 1.2rem; font-weight: bold; font-family: inherit; cursor: pointer; border-radius: 5px; transition: 0.3s; }
+        button:hover { background: #000; color: #00ff00; border: 2px solid #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .notice { font-size: 0.9rem; color: #888; margin-bottom: 25px; }
+        .error-box { border: 2px dashed #ff0000; color: #ff0000; padding: 15px; margin-top: 20px; border-radius: 5px; display: none; background: #100000; text-align: left; }
+        .error-title { font-weight: bold; margin-bottom: 8px; }
+        .slang-list { list-style: none; padding-left: 10px; }
+        .slang-item { margin-bottom: 5px; }
+        .results-container { margin-top: 30px; text-align: left; }
+        .length-section { margin-bottom: 20px; border: 1px solid #00ff00; padding: 15px; border-radius: 5px; background: #020a02; }
+        .length-title { font-size: 1.3rem; font-weight: bold; border-bottom: 1px solid #00ff00; padding-bottom: 5px; margin-bottom: 10px; color: #fff; }
+        .word-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .word-card { background: #000; border: 1px solid #00ff00; padding: 5px 12px; border-radius: 3px; font-size: 1.1rem; }
+        .loading { font-size: 1.2rem; color: #ffff00; margin: 20px 0; display: none; }
+        .no-results { color: #ff9900; margin: 20px 0; font-size: 1.1rem; }
     </style>
 </head>
 <body>
-    <div class="layout-wrapper">
-        <div class="sidebar-ad-column" id="left-sidebar-ad">Left Sidebar Ad (160x600)</div>
-        <div class="center-content-column">
-            <div class="ad-container" id="top-ad">Top Small Banner Ad (728x90)</div>
-            <main class="main-content">
-                <h1>JUMBLEVERSE</h1>
-                <div style="margin-bottom: 30px;">
-                    <input type="text" id="jumbleInput" maxlength="17" placeholder="Enter jumbled letters...">
-                    <button id="solveBtn">Solve It</button>
-                    <div class="limit-notice">* MAXIMUM 17 LETTERS ALLOWED</div>
-                </div>
-                <div id="resultsContainer"></div>
-                <div class="offensive-section">
-                    <div style="color: #ff0000; font-weight: bold; margin-bottom: 15px;">HEX OFFENSIVE WORDS DETECTED</div>
-                    <div id="offensiveWords">Clean input. No offensive words detected.</div>
-                </div>
-            </main>
-            <div class="ad-container" id="bottom-ad" style="min-height: 250px;">Bottom Large Banner Ad (300x250)</div>
-        </div>
-        <div class="sidebar-ad-column" id="right-sidebar-ad">Right Sidebar Ad (160x600)</div>
+
+<div class="wrapper">
+    <!-- বাম পাশের অ্যাড বক্স (এখানে Adsterra কোড বসাবেন) -->
+    <div class="sidebar-ad">
+        <!-- বাম পাশের বিজ্ঞাপনের কোড নিচে পেস্ট করুন -->
+        PLACE LEFT AD HERE
     </div>
-    <script>
-        const hardcoreSlangs = ["fuck", "cunt", "dick", "cock", "bitch", "whore", "slut"];
-        const regularSlangs = ["clit", "pussy", "penis", "peni", "suck", "ass", "asshole", "twat", "wank", "prick"];
-        const kindWordsList = ["love", "life", "free", "kind", "wise", "true", "safe", "good", "care", "hope", "pure", "warm", "soft", "help", "gift", "calm", "dear", "fair", "fine", "glad", "holy", "noble", "smart", "smile", "sweet", "trust", "brave", "charm", "cheer"];
-        let scrabbleDictionary = [];
-        let isDbLoaded = false;
 
-        async function fetchScrabbleWords() {
-            try {
-                const response = await fetch("https://githubusercontent.com");
-                const textData = await response.text();
-                scrabbleDictionary = textData.split(/\r?\n/).map(w => w.trim().toLowerCase()).filter(w => w.length >= 2 && w.length <= 7);
-                isDbLoaded = true;
-                console.log("300,000+ Word Bank Active!");
-            } catch (e) {
-                scrabbleDictionary = ["site", "item", "time", "game", "test", "step", "love", "life", "bench", "bough", "chief", "gecko", "back", "bang", "bare", "cafe", "face", "fake", "cake", "bird", "boubou", "gobo", "vugh", "yogh", "asshole", "pussy", "fuck"];
-                isDbLoaded = true;
-            }
+    <div class="container">
+        <h1>JUMBLEVERSE</h1>
+        
+        <div class="input-group">
+            <input type="text" id="jumbleInput" placeholder="Enter scrambled letters..." autocomplete="off">
+            <button onclick="processJumble()">SOLVE IT</button>
+        </div>
+        <div class="notice">* MAXIMUM 17 LETTERS ALLOWED</div>
+
+        <div id="loadingStatus" class="loading">SCANNING CODES & DICTIONARY...</div>
+
+        <!-- আপত্তিকর শব্দের বক্স -->
+        <div id="errorBox" class="error-box">
+            <div class="error-title">⚠️ HEX OFFENSIVE WORDS DETECTED</div>
+            <ul id="slangList" class="slang-list"></ul>
+        </div>
+
+        <!-- আসল রেজাল্ট দেখানোর বক্স -->
+        <div id="resultsArea" class="results-container"></div>
+    </div>
+
+    <!-- ডান পাশের অ্যাড বক্স (এখানে Adsterra কোড বসাবেন) -->
+    <div class="sidebar-ad">
+        <!-- ডান পাশের বিজ্ঞাপনের কোড নিচে পেস্ট করুন -->
+        PLACE RIGHT AD HERE
+    </div>
+</div>
+
+<script>
+    const badWords = ['penis', 'peni', 'sex', 'fuck', 'ass', 'bitch'];
+
+    async function processJumble() {
+        const inputField = document.getElementById('jumbleInput');
+        const resultsArea = document.getElementById('resultsArea');
+        const errorBox = document.getElementById('errorBox');
+        const slangList = document.getElementById('slangList');
+        const loadingStatus = document.getElementById('loadingStatus');
+
+        const inputValue = inputField.value.trim().toLowerCase();
+        
+        resultsArea.innerHTML = '';
+        errorBox.style.display = 'none';
+        slangList.innerHTML = '';
+
+        if (!inputValue) {
+            resultsArea.innerHTML = '<div class="no-results">Please enter some letters first!</div>';
+            return;
         }
 
-        function findAnagramMatches(inputStr, len) {
-            let counts = {};
-            for (let i = 0; i < inputStr.length; i++) { let char = inputStr[i]; counts[char] = (counts[char] || 0) + 1; }
-            return scrabbleDictionary.filter(w => {
-                if (w.length !== len) return false;
-                const wordCount = {};
-                for (let j = 0; j < w.length; j++) {
-                    let char = w[j]; wordCount[char] = (wordCount[char] || 0) + 1;
-                    if (!counts[char] || wordCount[char] > counts[char]) return false;
-                }
-                return true;
-            });
-        }
+        loadingStatus.style.display = 'block';
 
-        function detectAnagramSlangs(inputStr) {
-            let counts = {};
-            for (let i = 0; i < inputStr.length; i++) { let char = inputStr[i]; counts[char] = (counts[char] || 0) + 1; }
-            let hFound = []; let rFound = [];
-            hardcoreSlangs.forEach(s => {
-                let isM = true; let wC = {};
-                for (let j = 0; j < s.length; j++) { let char = s[j]; wC[char] = (wC[char] || 0) + 1; if (!counts[char] || wC[char] > counts[char]) { isM = false; break; } }
-                if (isM) hFound.push(s);
-            });
-            regularSlangs.forEach(s => {
-                let isM = true; let wC = {};
-                for (let j = 0; j < s.length; j++) { let char = s[j]; wC[char] = (wC[char] || 0) + 1; if (!counts[char] || wC[char] > counts[char]) { isM = false; break; } }
-                if (isM) rFound.push(s);
-            });
-            return { h: hFound, r: rFound };
-        }
+        try {
+            const response = await fetch(`/api/solve?input=${encodeURIComponent(inputValue)}`);
+            if (!response.ok) throw new Error('Network error or server limit');
+            
+            const data = await response.json();
+            loadingStatus.style.display = 'none';
 
-        document.getElementById("solveBtn").addEventListener("click", function() {
-            let input = document.getElementById("jumbleInput").value.trim().toLowerCase();
-            if (!input) { alert("Please enter some jumbled letters first!"); return; }
-            if (input.length > 17) { input = input.substring(0, 17); document.getElementById("jumbleInput").value = input; }
-            let container = document.getElementById("resultsContainer");
-            container.innerHTML = "";
-            if (!isDbLoaded) { container.innerHTML = "<div style='color:#00ff00; font-weight:bold;'>Initializing 300,000+ Word Global Dictionary Node...</div>"; return; }
-            let hasWords = false; let kindMatches = []; let goodMatches = {};
-            for (let l = 7; l >= 2; l--) {
-                let res = findAnagramMatches(input, l);
-                if (res.length > 0) {
-                    res.forEach(word => {
-                        if (hardcoreSlangs.indexOf(word) === -1 && regularSlangs.indexOf(word) === -1) {
-                            hasWords = true;
-                            if (kindWordsList.includes(word)) { kindMatches.push(word); } 
-                            else {
-                                if (!goodMatches[l]) goodMatches[l] = [];
-                                goodMatches[l].push(word);
-                            }
+            let hasWords = false;
+            let detectedBadWords = [];
+
+            const sortedLengths = Object.keys(data).sort((a, b) => b - a);
+
+            sortedLengths.forEach(length => {
+                const wordsArray = data[length] || [];
+                
+                const cleanWords = wordsArray.filter(word => {
+                    if (badWords.includes(word.toLowerCase())) {
+                        if (!detectedBadWords.includes(word.toUpperCase())) {
+                            detectedBadWords.push(word.toUpperCase());
                         }
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (cleanWords.length > 0) {
+                    hasWords = true;
+                    
+                    const section = document.createElement('div');
+                    section.className = 'length-section';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'length-title';
+                    title.innerText = `${length} LETTER WORDS (${cleanWords.length})`;
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'word-grid';
+                    
+                    cleanWords.forEach(word => {
+                        const card = document.createElement('div');
+                        card.className = 'word-card';
+                        card.innerText = word.toUpperCase();
+                        grid.appendChild(card);
                     });
+                    
+                    section.appendChild(title);
+                    section.appendChild(grid);
+                    resultsArea.appendChild(section);
                 }
+            });
+
+            if (detectedBadWords.length > 0) {
+                errorBox.style.display = 'block';
+                detectedBadWords.forEach(slang => {
+                    const li = document.createElement('li');
+                    li.className = 'slang-item';
+                    li.innerText = `▲ SLANG DETECTED & FILTERED: ${slang}`;
+                    slangList.appendChild(li);
+                });
             }
-            if (kindMatches.length > 0) {
-                let uKind = [...new Set(kindMatches)];
-                let kHtml = '<div class="word-group"><div class="group-title" style="color:#00ffff;margin-top:15px;">✨ KIND AND POSITIVE WORDS</div><div>';
-                uKind.forEach(w => { kHtml += '<span class="word-box" style="border-color:#00ffff;color:#00ffff;">' + w + '</span>'; });
-                kHtml += '</div></div>'; container.innerHTML += kHtml;
+
+            if (!hasWords) {
+                resultsArea.innerHTML = '<div class="no-results">No meaningful words found for these letters.</div>';
             }
-            for (let l = 7; l >= 2; l--) {
-                if (goodMatches[l] && goodMatches[l].length > 0) {
-                    let uGood = [...new Set(goodMatches[l])].slice(0, 60);
-                    let gHtml = '<div class="word-group"><div class="group-title" style="color:#00ff00;margin-top:15px;">🟢 ' + l + ' LETTER WORDS</div><div>';
-                    uGood.forEach(w => { gHtml += '<span class="word-box">' + w + '</span>'; });
-                    gHtml += '</div></div>'; container.innerHTML += gHtml;
-                }
-            }
-            if (!hasWords) { container.innerHTML = '<div style="color:#555;font-size:0.9rem;margin-top:15px;">No meaningful words (2-7 letters) formed.</div>'; }
-            let sData = detectAnagramSlangs(input);
-            let oContainer = document.getElementById("offensiveWords");
-            oContainer.innerHTML = "";
-            if (sData.h.length > 0 || sData.r.length > 0) {
-                if (sData.h.length > 0) { [...new Set(sData.h)].forEach(s => { oContainer.innerHTML += '<span class="word-box" style="border-color:#ff0055;color:#ff0055;background:rgba(255,0,85,0.1);font-weight:bold;margin:5px;display:inline-block;">🚨 HARDCORE: ' + s.toUpperCase() + '</span>'; }); }
-                if (sData.r.length > 0) { [...new Set(sData.r)].forEach(s => { oContainer.innerHTML += '<span class="word-box" style="border-color:#ff3300;color:#ff3300;background:rgba(255,51,0,0.1);font-weight:bold;margin:5px;display:inline-block;">⚠️ SLANG: ' + s.toUpperCase() + '</span>'; }); }
-            } else { oContainer.innerHTML = '<span style="color:#555;font-size:0.9rem;">Clean input. No offensive words detected.</span>'; }
-        });
-        window.addEventListener("DOMContentLoaded", fetchScrabbleWords);
-    </script>
+
+        } catch (error) {
+            loadingStatus.style.display = 'none';
+            resultsArea.innerHTML = `<div class="no-results" style="color:red;">Error connecting to solver system: ${error.message}</div>`;
+        }
+    }
+
+    document.getElementById('jumbleInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            processJumble();
+        }
+    });
+</script>
+
 </body>
 </html>
