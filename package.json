@@ -1,8 +1,6 @@
 {
   "name": "jumbler",
   "version": "1.0.0",
-  "description": "Jumble word solver passive income site",
-  "main": "api/solve.ts",
   "dependencies": {
     "an-array-of-english-words": "^3.0.0"
   },
