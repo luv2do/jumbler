@@ -1,6 +1,12 @@
 {
+  "name": "jumbler",
+  "version": "1.0.0",
+  "description": "Jumble word solver passive income site",
+  "main": "api/solve.ts",
   "dependencies": {
-    "@vercel/node": "^3.0.0",
-    "an-array-of-english-words": "^2.0.0"
+    "an-array-of-english-words": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
   }
 }
